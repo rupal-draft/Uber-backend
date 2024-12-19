@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 public class RideRequestDto {
 
     private Long id;
-    private Point pickUpLocation;
-    private Point dropOffLocation;
+    private PointDto pickUpLocation;
+    private PointDto dropOffLocation;
     private LocalDateTime requestTime;
     private RiderDto rider;
     private PaymentMethod paymentMethod;
@@ -20,7 +20,7 @@ public class RideRequestDto {
     public RideRequestDto() {
     }
 
-    public RideRequestDto(Long id, Point pickUpLocation, Point dropOffLocation, LocalDateTime requestTime, RiderDto rider, PaymentMethod paymentMethod, RideRequestStatus status) {
+    public RideRequestDto(Long id, PointDto pickUpLocation, PointDto dropOffLocation, LocalDateTime requestTime, RiderDto rider, PaymentMethod paymentMethod, RideRequestStatus status) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
@@ -38,19 +38,19 @@ public class RideRequestDto {
         this.id = id;
     }
 
-    public Point getPickUpLocation() {
+    public PointDto getPickUpLocation() {
         return pickUpLocation;
     }
 
-    public void setPickUpLocation(Point pickUpLocation) {
+    public void setPickUpLocation(PointDto pickUpLocation) {
         this.pickUpLocation = pickUpLocation;
     }
 
-    public Point getDropOffLocation() {
+    public PointDto getDropOffLocation() {
         return dropOffLocation;
     }
 
-    public void setDropOffLocation(Point dropOffLocation) {
+    public void setDropOffLocation(PointDto dropOffLocation) {
         this.dropOffLocation = dropOffLocation;
     }
 

@@ -25,7 +25,7 @@ public class RideRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Rider rider;
-
+    private Double fare;
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
     @Enumerated(value = EnumType.STRING)
@@ -34,7 +34,7 @@ public class RideRequest {
     public RideRequest() {
     }
 
-    public RideRequest(Long id, Point pickUpLocation, Point dropOffLocation, LocalDateTime requestTime, Rider rider, PaymentMethod paymentMethod, RideRequestStatus status) {
+    public RideRequest(Long id, Double fare, Point pickUpLocation, Point dropOffLocation, LocalDateTime requestTime, Rider rider, PaymentMethod paymentMethod, RideRequestStatus status) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
@@ -42,6 +42,7 @@ public class RideRequest {
         this.rider = rider;
         this.paymentMethod = paymentMethod;
         this.status = status;
+        this.fare = fare;
     }
 
     public Long getId() {
@@ -98,5 +99,13 @@ public class RideRequest {
 
     public void setStatus(RideRequestStatus status) {
         this.status = status;
+    }
+
+    public Double getFare() {
+        return fare;
+    }
+
+    public void setFare(Double fare) {
+        this.fare = fare;
     }
 }

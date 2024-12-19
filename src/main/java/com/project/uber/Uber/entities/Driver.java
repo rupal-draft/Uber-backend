@@ -17,19 +17,20 @@ public class Driver {
     private Double rating;
 
     private Boolean available;
-
     @Column(columnDefinition = "Geometry(Point, 4326)")
     private Point currentLocation;
+    private Long vehicleId;
 
     public Driver() {
     }
 
-    public Driver(Long id, User user, Double rating, Boolean available, Point currentLocation) {
+    public Driver(Long id, User user, Double rating, Boolean available, Point currentLocation, Long vehicleId) {
         this.id = id;
         this.user = user;
         this.rating = rating;
         this.available = available;
         this.currentLocation = currentLocation;
+        this.vehicleId = vehicleId;
     }
 
     public Long getId() {
@@ -70,5 +71,13 @@ public class Driver {
 
     public void setCurrentLocation(Point currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 }
