@@ -31,7 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-.vscode/
 src/main/resources/application.properties
 src/main/resources/log4j.properties
 src/main/resources/application.yml

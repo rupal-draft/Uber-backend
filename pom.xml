@@ -12,7 +12,7 @@
 	<artifactId>Uber</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Uber</name>
-	<description>Demo project for Spring Boot</description>
+	<description>🚗 Uber Backend with Spring Boot &amp; Spring Security. This repository contains the backend implementation for an Uber-like ride-hailing application. Built using Spring Boot, the project leverages Spring Security for robust authentication and authorization, ensuring a secure and scalable architecture.</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -32,22 +32,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>3.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-spatial</artifactId>
-			<version>6.6.3.Final</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -65,9 +54,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.modelmapper</groupId>
@@ -75,10 +64,11 @@
 			<version>3.2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>6.6.3.Final</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
