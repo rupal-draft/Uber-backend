@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class ApiResponse<T> {
 
     private LocalDateTime timeStamp;
-    private ApiError apiError;
+    private ApiError error;
     private T data;
 
     public ApiResponse(){
@@ -17,9 +17,9 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    public ApiResponse(ApiError apiError){
+    public ApiResponse(ApiError error){
         this();
-        this.apiError = apiError;
+        this.error = error;
     }
 
     public LocalDateTime getTimeStamp() {
@@ -31,11 +31,11 @@ public class ApiResponse<T> {
     }
 
     public ApiError getApiError() {
-        return apiError;
+        return error;
     }
 
-    public void setApiError(ApiError apiError) {
-        this.apiError = apiError;
+    public void setApiError(ApiError error) {
+        this.error = error;
     }
 
     public T getData() {
