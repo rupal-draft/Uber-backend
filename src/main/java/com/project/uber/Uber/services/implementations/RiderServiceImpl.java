@@ -5,8 +5,11 @@ import com.project.uber.Uber.dto.RideDto;
 import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.dto.RiderDto;
 import com.project.uber.Uber.entities.RideRequest;
+import com.project.uber.Uber.entities.Rider;
+import com.project.uber.Uber.entities.User;
 import com.project.uber.Uber.entities.enums.RideRequestStatus;
 import com.project.uber.Uber.repositories.RideRequestRepository;
+import com.project.uber.Uber.repositories.RiderRepository;
 import com.project.uber.Uber.services.RiderService;
 import com.project.uber.Uber.strategies.DriverMatchingStrategy;
 import com.project.uber.Uber.strategies.RideFareCalculation;
@@ -24,12 +27,14 @@ public class RiderServiceImpl implements RiderService {
     private final RideFareCalculation rideFareCalculation;
     private final RideRequestRepository rideRequestRepository;
     private final DriverMatchingStrategy driverMatchingStrategy;
+    private final RiderRepository riderRepository;
 
-    public RiderServiceImpl(ModelMapper modelMapper, RideFareCalculation rideFareCalculation, RideRequestRepository rideRequestRepository, DriverMatchingStrategy driverMatchingStrategy) {
+    public RiderServiceImpl(ModelMapper modelMapper, RideFareCalculation rideFareCalculation, RideRequestRepository rideRequestRepository, DriverMatchingStrategy driverMatchingStrategy, RiderRepository riderRepository) {
         this.modelMapper = modelMapper;
         this.rideFareCalculation = rideFareCalculation;
         this.rideRequestRepository = rideRequestRepository;
         this.driverMatchingStrategy = driverMatchingStrategy;
+        this.riderRepository = riderRepository;
     }
 
     @Override
@@ -63,5 +68,15 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public List<RideDto> getAllMyRides() {
         return List.of();
+    }
+
+    @Override
+    public void createNewRider(User savedUser) {
+        Rider rider = new Rider
+                .RiderBuilder()
+                .setUser(savedUser)
+                .setRating(0.0)
+                .build();
+        riderRepository.save(rider);
     }
 }
