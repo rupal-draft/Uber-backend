@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service
-@Primary
-public class RideFareDefaultCalculationImpl implements RideFareCalculation {
+public class RideFareDefaultCalculation implements RideFareCalculation {
 
     private final DistanceCalculationService distanceCalculationService;
 
-    public RideFareDefaultCalculationImpl(DistanceCalculationService distanceCalculationService) {
+    public RideFareDefaultCalculation(DistanceCalculationService distanceCalculationService) {
         this.distanceCalculationService = distanceCalculationService;
     }
 
     @Override
     public double calculateFare(RideRequest rideRequest) {
         Double distance = distanceCalculationService.calculateDistance(rideRequest.getPickUpLocation(),rideRequest.getDropOffLocation());
-        return distance*10;
+        return distance * RIDE_FARE_MULTIPLIER;
     }
 }

@@ -4,21 +4,22 @@ import com.project.uber.Uber.entities.Driver;
 import com.project.uber.Uber.entities.RideRequest;
 import com.project.uber.Uber.repositories.DriverRepository;
 import com.project.uber.Uber.strategies.DriverMatchingStrategy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DriverMatchingHighestRatedDriverImpl implements DriverMatchingStrategy {
+public class DriverMatchingNearestDrivers implements DriverMatchingStrategy {
 
     private final DriverRepository driverRepository;
 
-    public DriverMatchingHighestRatedDriverImpl(DriverRepository driverRepository) {
+    public DriverMatchingNearestDrivers(DriverRepository driverRepository) {
         this.driverRepository = driverRepository;
     }
 
     @Override
     public List<Driver> findMatchingDrivers(RideRequest rideRequest) {
-        return driverRepository.findTenNearbyTopRatedDrivers(rideRequest.getPickUpLocation());
+        return driverRepository.findTenNearestDrivers(rideRequest.getPickUpLocation());
     }
 }

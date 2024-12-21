@@ -3,10 +3,12 @@ package com.project.uber.Uber.services.implementations;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.services.DistanceCalculationService;
 import org.locationtech.jts.geom.Point;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+@Service
 public class DistanceCalculationOSRMImpl implements DistanceCalculationService {
 
     private static final String OSRM_API_BASE_URL = "https://router.project-osrm.org/route/v1/driving/";
