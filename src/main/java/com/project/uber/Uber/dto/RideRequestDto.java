@@ -3,7 +3,6 @@ package com.project.uber.Uber.dto;
 
 import com.project.uber.Uber.entities.enums.PaymentMethod;
 import com.project.uber.Uber.entities.enums.RideRequestStatus;
-import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
@@ -14,17 +13,19 @@ public class RideRequestDto {
     private PointDto dropOffLocation;
     private LocalDateTime requestTime;
     private RiderDto rider;
+    private Double fare;
     private PaymentMethod paymentMethod;
     private RideRequestStatus status;
 
     public RideRequestDto() {
     }
 
-    public RideRequestDto(Long id, PointDto pickUpLocation, PointDto dropOffLocation, LocalDateTime requestTime, RiderDto rider, PaymentMethod paymentMethod, RideRequestStatus status) {
+    public RideRequestDto(Long id, PointDto pickUpLocation, Double fare, PointDto dropOffLocation, LocalDateTime requestTime, RiderDto rider, PaymentMethod paymentMethod, RideRequestStatus status) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
         this.requestTime = requestTime;
+        this.fare = fare;
         this.rider = rider;
         this.paymentMethod = paymentMethod;
         this.status = status;
@@ -84,5 +85,13 @@ public class RideRequestDto {
 
     public void setStatus(RideRequestStatus status) {
         this.status = status;
+    }
+
+    public Double getFare() {
+        return fare;
+    }
+
+    public void setFare(Double fare) {
+        this.fare = fare;
     }
 }

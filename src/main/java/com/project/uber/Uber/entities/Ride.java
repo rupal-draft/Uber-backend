@@ -42,7 +42,7 @@ public class Ride {
     public Ride() {
     }
 
-    public Ride(Long id, Point pickUpLocation, Point dropOffLocation, LocalDateTime createdTime, Rider rider, Driver driver, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt) {
+    public Ride(Long id, Point pickUpLocation, Point dropOffLocation, LocalDateTime createdTime, Rider rider, Driver driver, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt, String otp) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
@@ -52,6 +52,7 @@ public class Ride {
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.fare = fare;
+        this.otp = otp;
         this.startedAt = startedAt;
         this.endedAt = endedAt;
     }
@@ -142,5 +143,13 @@ public class Ride {
 
     public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

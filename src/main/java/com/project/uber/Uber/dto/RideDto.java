@@ -1,17 +1,15 @@
 package com.project.uber.Uber.dto;
 
-import com.project.uber.Uber.entities.Driver;
-import com.project.uber.Uber.entities.Rider;
 import com.project.uber.Uber.entities.enums.PaymentMethod;
 import com.project.uber.Uber.entities.enums.RideStatus;
-import org.locationtech.jts.geom.Point;
+
 import java.time.LocalDateTime;
 
 public class RideDto {
 
     private Long id;
-    private Point pickUpLocation;
-    private Point dropOffLocation;
+    private PointDto pickUpLocation;
+    private PointDto dropOffLocation;
     private LocalDateTime createdTime;
     private RiderDto rider;
     private DriverDto driver;
@@ -29,7 +27,7 @@ public class RideDto {
         this.driver = driver;
     }
 
-    public RideDto(Long id, Point pickUpLocation, Point dropOffLocation, LocalDateTime createdTime, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt) {
+    public RideDto(Long id, PointDto pickUpLocation, PointDto dropOffLocation, LocalDateTime createdTime, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
@@ -49,19 +47,19 @@ public class RideDto {
         this.id = id;
     }
 
-    public Point getPickUpLocation() {
+    public PointDto getPickUpLocation() {
         return pickUpLocation;
     }
 
-    public void setPickUpLocation(Point pickUpLocation) {
+    public void setPickUpLocation(PointDto pickUpLocation) {
         this.pickUpLocation = pickUpLocation;
     }
 
-    public Point getDropOffLocation() {
+    public PointDto getDropOffLocation() {
         return dropOffLocation;
     }
 
-    public void setDropOffLocation(Point dropOffLocation) {
+    public void setDropOffLocation(PointDto dropOffLocation) {
         this.dropOffLocation = dropOffLocation;
     }
 
