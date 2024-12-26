@@ -9,6 +9,7 @@ import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.UserRepository;
 import com.project.uber.Uber.services.AuthService;
 import com.project.uber.Uber.services.RiderService;
+import com.project.uber.Uber.services.WalletService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +23,13 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RiderService riderService;
+    private final WalletService walletService;
 
-    public AuthServiceImpl(ModelMapper modelMapper, UserRepository userRepository, RiderService riderService) {
+    public AuthServiceImpl(ModelMapper modelMapper, UserRepository userRepository, RiderService riderService, WalletService walletService) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.riderService = riderService;
+        this.walletService = walletService;
     }
 
     @Override
@@ -45,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
         mappedUser.setRoles(Set.of(Roles.RIDER));
         User savedUser = userRepository.save(mappedUser);
         riderService.createNewRider(savedUser);
+        walletService.createNewWallet(savedUser);
         return modelMapper.map(savedUser,UserDto.class);
     }
 

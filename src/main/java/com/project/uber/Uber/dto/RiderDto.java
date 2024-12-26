@@ -1,15 +1,26 @@
 package com.project.uber.Uber.dto;
 
 public class RiderDto {
+
+    private Long id;
     private UserDto user;
     private Double rating;
 
     public RiderDto() {
     }
 
-    public RiderDto(UserDto user, Double rating) {
+    public RiderDto(UserDto user, Double rating, Long id) {
+        this.id = id;
         this.user = user;
         this.rating = rating;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public UserDto getUser() {

@@ -31,13 +31,13 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Long id, PaymentMethod paymentMethod, Ride ride, PaymentStatus paymentStatus, Double amount, LocalDateTime paymentTime) {
-        this.id = id;
-        this.paymentMethod = paymentMethod;
-        this.ride = ride;
-        this.paymentStatus = paymentStatus;
-        this.amount = amount;
-        this.paymentTime = paymentTime;
+    public Payment(PaymentBuilder builder) {
+        this.id = builder.id;
+        this.paymentMethod = builder.paymentMethod;
+        this.ride = builder.ride;
+        this.paymentStatus = builder.paymentStatus;
+        this.amount = builder.amount;
+        this.paymentTime = builder.paymentTime;
     }
 
     public Long getId() {
@@ -86,5 +86,48 @@ public class Payment {
 
     public void setPaymentTime(LocalDateTime paymentTime) {
         this.paymentTime = paymentTime;
+    }
+
+    public static class PaymentBuilder {
+        private Long id;
+        private PaymentMethod paymentMethod;
+        private Ride ride;
+        private PaymentStatus paymentStatus;
+        private Double amount;
+        private LocalDateTime paymentTime;
+
+        public PaymentBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public PaymentBuilder paymentMethod(PaymentMethod paymentMethod) {
+            this.paymentMethod = paymentMethod;
+            return this;
+        }
+
+        public PaymentBuilder ride(Ride ride) {
+            this.ride = ride;
+            return this;
+        }
+
+        public PaymentBuilder paymentStatus(PaymentStatus paymentStatus) {
+            this.paymentStatus = paymentStatus;
+            return this;
+        }
+
+        public PaymentBuilder amount(Double amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public PaymentBuilder paymentTime(LocalDateTime paymentTime) {
+            this.paymentTime = paymentTime;
+            return this;
+        }
+
+        public Payment build() {
+            return new Payment(this);
+        }
     }
 }

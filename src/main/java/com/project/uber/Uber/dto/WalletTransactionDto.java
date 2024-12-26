@@ -1,41 +1,25 @@
-package com.project.uber.Uber.entities;
+package com.project.uber.Uber.dto;
 
 import com.project.uber.Uber.entities.enums.TransactionMethod;
 import com.project.uber.Uber.entities.enums.TransactionType;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class WalletTransaction {
+public class WalletTransactionDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double amount;
-
-    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
-    @Enumerated(EnumType.STRING)
     private TransactionMethod transactionMethod;
-
-    @OneToOne
-    private Ride ride;
-
+    private RideDto ride;
     private String transactionId;
-
-    @ManyToOne
-    private Wallet wallet;
-
-    @CreationTimestamp
+    private WalletDto wallet;
     private LocalDateTime timestamp;
 
-    public WalletTransaction() {
+    public WalletTransactionDto() {
     }
 
-    public WalletTransaction(WalletTransactionBuilder builder) {
+    public WalletTransactionDto(WalletTransactionDtoBuilder builder) {
         this.id = builder.id;
         this.amount = builder.amount;
         this.transactionType = builder.transactionType;
@@ -78,11 +62,11 @@ public class WalletTransaction {
         this.transactionMethod = transactionMethod;
     }
 
-    public Ride getRide() {
+    public RideDto getRide() {
         return ride;
     }
 
-    public void setRide(Ride ride) {
+    public void setRide(RideDto ride) {
         this.ride = ride;
     }
 
@@ -94,11 +78,11 @@ public class WalletTransaction {
         this.transactionId = transactionId;
     }
 
-    public Wallet getWallet() {
+    public WalletDto getWallet() {
         return wallet;
     }
 
-    public void setWallet(Wallet wallet) {
+    public void setWallet(WalletDto wallet) {
         this.wallet = wallet;
     }
 
@@ -110,58 +94,58 @@ public class WalletTransaction {
         this.timestamp = timestamp;
     }
 
-    public static class WalletTransactionBuilder{
+    public static class WalletTransactionDtoBuilder {
         private Long id;
         private Double amount;
         private TransactionType transactionType;
         private TransactionMethod transactionMethod;
-        private Ride ride;
+        private RideDto ride;
         private String transactionId;
-        private Wallet wallet;
+        private WalletDto wallet;
         private LocalDateTime timestamp;
 
-        public WalletTransactionBuilder id(Long id) {
+        public WalletTransactionDtoBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public WalletTransactionBuilder amount(Double amount) {
+        public WalletTransactionDtoBuilder amount(Double amount) {
             this.amount = amount;
             return this;
         }
 
-        public WalletTransactionBuilder transactionType(TransactionType transactionType) {
+        public WalletTransactionDtoBuilder transactionType(TransactionType transactionType) {
             this.transactionType = transactionType;
             return this;
         }
 
-        public WalletTransactionBuilder transactionMethod(TransactionMethod transactionMethod) {
+        public WalletTransactionDtoBuilder transactionMethod(TransactionMethod transactionMethod) {
             this.transactionMethod = transactionMethod;
             return this;
         }
 
-        public WalletTransactionBuilder ride(Ride ride) {
+        public WalletTransactionDtoBuilder ride(RideDto ride) {
             this.ride = ride;
             return this;
         }
 
-        public WalletTransactionBuilder transactionId(String transactionId) {
+        public WalletTransactionDtoBuilder transactionId(String transactionId) {
             this.transactionId = transactionId;
             return this;
         }
 
-        public WalletTransactionBuilder wallet(Wallet wallet) {
+        public WalletTransactionDtoBuilder wallet(WalletDto wallet) {
             this.wallet = wallet;
             return this;
         }
 
-        public WalletTransactionBuilder timestamp(LocalDateTime timestamp) {
+        public WalletTransactionDtoBuilder timestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
-        public WalletTransaction build() {
-            return new WalletTransaction(this);
+        public WalletTransactionDto build() {
+            return new WalletTransactionDto(this);
         }
     }
 }

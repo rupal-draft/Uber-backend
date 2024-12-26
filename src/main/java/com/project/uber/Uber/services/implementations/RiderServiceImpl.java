@@ -1,24 +1,29 @@
 package com.project.uber.Uber.services.implementations;
 
-import com.project.uber.Uber.dto.DriverDto;
 import com.project.uber.Uber.dto.RideDto;
 import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.dto.RiderDto;
+import com.project.uber.Uber.entities.Ride;
 import com.project.uber.Uber.entities.RideRequest;
 import com.project.uber.Uber.entities.Rider;
 import com.project.uber.Uber.entities.User;
 import com.project.uber.Uber.entities.enums.RideRequestStatus;
+import com.project.uber.Uber.entities.enums.RideStatus;
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
+import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.RideRequestRepository;
 import com.project.uber.Uber.repositories.RiderRepository;
+import com.project.uber.Uber.services.DriverService;
+import com.project.uber.Uber.services.RideService;
 import com.project.uber.Uber.services.RiderService;
-import com.project.uber.Uber.strategies.StrategyManager;
+import com.project.uber.Uber.strategies.mangers.DriverMatchingStrategyManager;
+import com.project.uber.Uber.strategies.mangers.RideFareCalculationStrategyManager;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class RiderServiceImpl implements RiderService {
@@ -27,14 +32,20 @@ public class RiderServiceImpl implements RiderService {
 
     private final ModelMapper modelMapper;
     private final RideRequestRepository rideRequestRepository;
-    private final StrategyManager strategyManager;
+    private final DriverMatchingStrategyManager driverMatchingStrategyManager;
+    private final RideFareCalculationStrategyManager rideFareCalculationStrategyManager;
     private final RiderRepository riderRepository;
+    private final RideService rideService;
+    private final DriverService driverService;
 
-    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, StrategyManager strategyManager, RiderRepository riderRepository) {
+    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, DriverMatchingStrategyManager driverMatchingStrategyManager, RiderRepository riderRepository, RideService rideService, DriverService driverService, RideFareCalculationStrategyManager rideFareCalculationStrategyManager) {
         this.modelMapper = modelMapper;
         this.rideRequestRepository = rideRequestRepository;
-        this.strategyManager = strategyManager;
+        this.driverMatchingStrategyManager = driverMatchingStrategyManager;
         this.riderRepository = riderRepository;
+        this.rideService = rideService;
+        this.driverService = driverService;
+        this.rideFareCalculationStrategyManager = rideFareCalculationStrategyManager;
     }
 
     @Override
@@ -44,33 +55,40 @@ public class RiderServiceImpl implements RiderService {
         Rider rider = getCurrentRider();
         RideRequest rideRequest = modelMapper.map(rideRequestDto,RideRequest.class);
         rideRequest.setStatus(RideRequestStatus.PENDING);
-        Double fare = strategyManager.rideFareCalculation().calculateFare(rideRequest);
+        Double fare = rideFareCalculationStrategyManager.rideFareCalculation().calculateFare(rideRequest);
         rideRequest.setFare(fare);
         rideRequest.setRider(rider);
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
-        strategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
+        driverMatchingStrategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
         return modelMapper.map(savedRideRequest,RideRequestDto.class);
 
     }
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        return null;
-    }
+        Ride ride = rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
 
-    @Override
-    public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+        validateRide(ride, rider, RideStatus.CONFIRMED);
+
+        driverService.updateDriverAvailability(ride.getDriver(), true);
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+
+        return modelMapper.map(savedRide,RideDto.class);
     }
 
     @Override
     public RiderDto getRiderProfile() {
-        return null;
+        Rider rider = getCurrentRider();
+        return modelMapper.map(rider,RiderDto.class);
     }
 
     @Override
-    public List<RideDto> getAllMyRides() {
-        return List.of();
+    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
+        Rider rider = getCurrentRider();
+        return rideService
+                .getAllRidesOfRider(rider,pageRequest)
+                .map(ride -> modelMapper.map(ride,RideDto.class));
     }
 
     @Override
@@ -89,4 +107,36 @@ public class RiderServiceImpl implements RiderService {
                 .findById(1l)
                 .orElseThrow(()-> new ResourceNotFoundException("No Rider was found with ID: "+1l));
     }
+
+    @Override
+    public Rider getRiderById(Long id) {
+        return riderRepository
+                .findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("No Rider was found with ID: "+id));
+    }
+
+    @Override
+    public Rider updateRating(Rider rider, Double rating) {
+        rider.setRating(rating);
+        Rider savedRider = riderRepository.save(rider);
+        return savedRider;
+    }
+
+    public static void validateRide(Ride ride, Rider rider, RideStatus expectedStatus) {
+        if (ride == null) {
+            throw new ResourceNotFoundException("Ride cannot be null.");
+        }
+        if (rider == null) {
+            throw new ResourceNotFoundException("Rider cannot be null.");
+        }
+        if (!ride.getStatus().equals(expectedStatus)) {
+            throw new RuntimeConflictException(
+                    String.format("Invalid ride status! Expected: %s, Found: %s", expectedStatus, ride.getStatus())
+            );
+        }
+        if (ride.getRider() == null || !ride.getRider().equals(rider)) {
+            throw new RuntimeConflictException("The provided rider does not own this ride.");
+        }
+    }
+
 }
