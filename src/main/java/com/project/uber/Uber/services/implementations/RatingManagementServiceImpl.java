@@ -31,8 +31,8 @@ public class RatingManagementServiceImpl implements RatingManagementService {
     }
 
     @Override
-    public DriverDto rateDriver(Long rideId, RatingDto rating) {
-        Ride ride = rideService.getRideById(rideId);
+    public DriverDto rateDriver(RatingDto rating) {
+        Ride ride = rideService.getRideById(rating.getRideId());
         Rider rider = riderService.getCurrentRider();
 
         RiderServiceImpl.validateRide(ride, rider, RideStatus.ENDED);
@@ -43,9 +43,9 @@ public class RatingManagementServiceImpl implements RatingManagementService {
     }
 
     @Override
-    public RiderDto rateRider(Long rideId, RatingDto rating) {
+    public RiderDto rateRider(RatingDto rating) {
 
-        Ride ride = rideService.getRideById(rideId);
+        Ride ride = rideService.getRideById(rating.getRideId());
         Driver driver = driverService.getCurrentDriver();
 
         DriverServiceImpl.validateRide(ride, driver, RideStatus.ENDED);

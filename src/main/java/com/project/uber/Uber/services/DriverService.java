@@ -2,25 +2,25 @@ package com.project.uber.Uber.services;
 
 
 import com.project.uber.Uber.dto.DriverDto;
-import com.project.uber.Uber.dto.RideDto;
+import com.project.uber.Uber.dto.DriverRideDto;
 import com.project.uber.Uber.dto.RideStartDto;
 import com.project.uber.Uber.entities.Driver;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface DriverService {
 
-    RideDto acceptRide(Long rideRequestId);
+    DriverRideDto acceptRide(Long rideRequestId);
 
-    RideDto cancelRide(Long rideId);
+    DriverRideDto cancelRide(Long rideId);
 
-    RideDto startRide(Long rideId, RideStartDto rideStartDto);
+    DriverRideDto startRide(Long rideId, RideStartDto rideStartDto);
 
-    RideDto endRide(Long rideId);
+    DriverRideDto endRide(Long rideId);
 
     DriverDto getDriverProfile();
 
-    Page<RideDto> getAllMyRides(PageRequest pageRequest);
+    Page<DriverRideDto> getAllMyRides(Pageable pageRequest);
 
     Driver getCurrentDriver();
 
@@ -29,4 +29,6 @@ public interface DriverService {
     Driver updateRating(Driver driver, Double rating);
 
     Driver updateDriverAvailability(Driver driver, boolean available);
+
+    Driver createNewDriver(Driver createDriver);
 }

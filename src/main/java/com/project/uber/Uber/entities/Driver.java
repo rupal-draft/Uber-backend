@@ -36,13 +36,13 @@ public class Driver {
     public Driver() {
     }
 
-    public Driver(Long id, User user, Double rating, Boolean available, Point currentLocation, Long vehicleId) {
-        this.id = id;
-        this.user = user;
-        this.rating = rating;
-        this.available = available;
-        this.currentLocation = currentLocation;
-        this.vehicleId = vehicleId;
+    public Driver(DriverBuilder builder) {
+        this.id = builder.id;
+        this.user = builder.user;
+        this.rating = builder.rating;
+        this.available = builder.available;
+        this.currentLocation = builder.currentLocation;
+        this.vehicleId = builder.vehicleId;
     }
 
     public Long getId() {
@@ -91,5 +91,49 @@ public class Driver {
 
     public void setVehicleId(Long vehicleId) {
         this.vehicleId = vehicleId;
+    }
+
+    public static class DriverBuilder {
+
+        private Long id;
+        private User user;
+        private Double rating;
+        private Boolean available;
+        private Point currentLocation;
+        private Long vehicleId;
+
+        public DriverBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public DriverBuilder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public DriverBuilder rating(Double rating) {
+            this.rating = rating;
+            return this;
+        }
+
+        public DriverBuilder available(Boolean available) {
+            this.available = available;
+            return this;
+        }
+
+        public DriverBuilder currentLocation(Point currentLocation) {
+            this.currentLocation = currentLocation;
+            return this;
+        }
+
+        public DriverBuilder vehicleId(Long vehicleId) {
+            this.vehicleId = vehicleId;
+            return this;
+        }
+
+        public Driver build() {
+            return new Driver(this);
+        }
     }
 }

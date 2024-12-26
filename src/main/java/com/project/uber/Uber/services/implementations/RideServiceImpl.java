@@ -13,7 +13,7 @@ import com.project.uber.Uber.services.RideRequestService;
 import com.project.uber.Uber.services.RideService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import static com.project.uber.Uber.utils.GenerateOtp.generateOtp;
@@ -60,12 +60,12 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
+    public Page<Ride> getAllRidesOfRider(Rider rider, Pageable pageRequest) {
         return rideRepository.findByRider(rider,pageRequest);
     }
 
     @Override
-    public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
+    public Page<Ride> getAllRidesOfDriver(Driver driver, Pageable pageRequest) {
         return rideRepository.findByDriver(driver,pageRequest);
     }
 

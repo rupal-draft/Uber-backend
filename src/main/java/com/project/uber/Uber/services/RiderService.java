@@ -6,7 +6,7 @@ import com.project.uber.Uber.dto.RiderDto;
 import com.project.uber.Uber.entities.Rider;
 import com.project.uber.Uber.entities.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface RiderService {
 
@@ -16,7 +16,7 @@ public interface RiderService {
 
     RiderDto getRiderProfile();
 
-    Page<RideDto> getAllMyRides(PageRequest pageRequest);
+    Page<RideDto> getAllMyRides(Pageable pageRequest);
 
     void createNewRider(User savedUser);
 

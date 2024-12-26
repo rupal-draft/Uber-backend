@@ -1,7 +1,7 @@
 package com.project.uber.Uber.services.implementations;
 
 import com.project.uber.Uber.dto.DriverDto;
-import com.project.uber.Uber.dto.RideDto;
+import com.project.uber.Uber.dto.DriverRideDto;
 import com.project.uber.Uber.dto.RideStartDto;
 import com.project.uber.Uber.entities.Driver;
 import com.project.uber.Uber.entities.Ride;
@@ -17,7 +17,7 @@ import com.project.uber.Uber.services.RideRequestService;
 import com.project.uber.Uber.services.RideService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public RideDto acceptRide(Long rideRequestId) {
+    public DriverRideDto acceptRide(Long rideRequestId) {
 
         RideRequest rideRequest = rideRequestService.findRideRequestById(rideRequestId);
         Driver driver = getCurrentDriver();
@@ -53,11 +53,11 @@ public class DriverServiceImpl implements DriverService {
 
         Ride ride = rideService.createNewRide(rideRequest, savedDriver);
 
-        return modelMapper.map(ride, RideDto.class);
+        return modelMapper.map(ride, DriverRideDto.class);
     }
 
     @Override
-    public RideDto cancelRide(Long rideId) {
+    public DriverRideDto cancelRide(Long rideId) {
 
         Ride ride = rideService.getRideById(rideId);
         Driver driver = getCurrentDriver();
@@ -68,12 +68,12 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
 
 
-        return modelMapper.map(savedRide, RideDto.class);
+        return modelMapper.map(savedRide, DriverRideDto.class);
     }
 
     @Override
     @Transactional
-    public RideDto startRide(Long rideId, RideStartDto rideStartDto) {
+    public DriverRideDto startRide(Long rideId, RideStartDto rideStartDto) {
 
         Ride ride = rideService.getRideById(rideId);
         Driver driver = getCurrentDriver();
@@ -88,12 +88,12 @@ public class DriverServiceImpl implements DriverService {
 
         paymentService.createNewPayment(savedRide);
 
-        return modelMapper.map(savedRide, RideDto.class);
+        return modelMapper.map(savedRide, DriverRideDto.class);
     }
 
     @Override
     @Transactional
-    public RideDto endRide(Long rideId) {
+    public DriverRideDto endRide(Long rideId) {
 
         Ride ride = rideService.getRideById(rideId);
         Driver driver = getCurrentDriver();
@@ -104,7 +104,7 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
         updateDriverAvailability(driver, true);
         paymentService.processPayment(savedRide);
-        return modelMapper.map(savedRide, RideDto.class);
+        return modelMapper.map(savedRide, DriverRideDto.class);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
+    public Page<DriverRideDto> getAllMyRides(Pageable pageRequest) {
         Driver driver = getCurrentDriver();
         return rideService
                 .getAllRidesOfDriver(driver,pageRequest)
-                .map(ride -> modelMapper.map(ride, RideDto.class));
+                .map(ride -> modelMapper.map(ride, DriverRideDto.class));
     }
 
     @Override
@@ -147,6 +147,11 @@ public class DriverServiceImpl implements DriverService {
         driver.setAvailable(available);
         Driver savedDriver = driverRepository.save(driver);
         return savedDriver;
+    }
+
+    @Override
+    public Driver createNewDriver(Driver createDriver) {
+        return driverRepository.save(createDriver);
     }
 
     private void validateRequest(RideRequest rideRequest, Driver driver) {

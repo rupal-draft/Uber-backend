@@ -3,7 +3,6 @@ package com.project.uber.Uber.entities;
 import com.project.uber.Uber.entities.enums.TransactionMethod;
 import com.project.uber.Uber.entities.enums.TransactionType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;

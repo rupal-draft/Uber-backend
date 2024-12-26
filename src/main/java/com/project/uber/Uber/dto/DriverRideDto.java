@@ -5,7 +5,7 @@ import com.project.uber.Uber.entities.enums.RideStatus;
 
 import java.time.LocalDateTime;
 
-public class RideDto {
+public class DriverRideDto {
 
     private Long id;
     private PointDto pickUpLocation;
@@ -16,26 +16,24 @@ public class RideDto {
     private PaymentMethod paymentMethod;
     private RideStatus status;
     private Double fare;
-    private String otp;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
-    public RideDto() {
+    public DriverRideDto() {
     }
 
-    public RideDto(Long id, PointDto pickUpLocation, RiderDto rider, String otp, DriverDto driver, PointDto dropOffLocation, LocalDateTime createdTime, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt) {
+    public DriverRideDto(Long id, PointDto pickUpLocation, PointDto dropOffLocation, LocalDateTime createdTime, RiderDto rider, DriverDto driver, PaymentMethod paymentMethod, RideStatus status, Double fare, LocalDateTime startedAt, LocalDateTime endedAt) {
         this.id = id;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
         this.createdTime = createdTime;
+        this.rider = rider;
+        this.driver = driver;
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.fare = fare;
         this.startedAt = startedAt;
         this.endedAt = endedAt;
-        this.rider = rider;
-        this.driver = driver;
-        this.otp = otp;
     }
 
     public Long getId() {
@@ -68,6 +66,22 @@ public class RideDto {
 
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public RiderDto getRider() {
+        return rider;
+    }
+
+    public void setRider(RiderDto rider) {
+        this.rider = rider;
+    }
+
+    public DriverDto getDriver() {
+        return driver;
+    }
+
+    public void setDriver(DriverDto driver) {
+        this.driver = driver;
     }
 
     public PaymentMethod getPaymentMethod() {
@@ -108,29 +122,5 @@ public class RideDto {
 
     public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
-    }
-
-    public RiderDto getRider() {
-        return rider;
-    }
-
-    public void setRider(RiderDto rider) {
-        this.rider = rider;
-    }
-
-    public DriverDto getDriver() {
-        return driver;
-    }
-
-    public void setDriver(DriverDto driver) {
-        this.driver = driver;
-    }
-
-    public String getOtp() {
-        return otp;
-    }
-
-    public void setOtp(String otp) {
-        this.otp = otp;
     }
 }
