@@ -1,6 +1,8 @@
 package com.project.uber.Uber.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
@@ -11,12 +13,15 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "User is required")
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
+    @NotNull(message = "Balance cannot be null")
+    @PositiveOrZero(message = "Balance must be zero or a positive value")
     private Double balance = 0.0;
 
-    @OneToMany(mappedBy = "wallet",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WalletTransaction> transactions;
 
     public Wallet() {

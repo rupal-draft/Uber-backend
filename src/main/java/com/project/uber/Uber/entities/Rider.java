@@ -1,6 +1,9 @@
 package com.project.uber.Uber.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Rider {
@@ -11,8 +14,12 @@ public class Rider {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @NotNull(message = "User must be associated with the rider")
     private User user;
 
+    @NotNull(message = "Rating is required")
+    @Min(value = 0, message = "Rating cannot be less than 0")
+    @Max(value = 5, message = "Rating cannot be more than 5")
     private Double rating;
 
     private Rider(RiderBuilder builder) {

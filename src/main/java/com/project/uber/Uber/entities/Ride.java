@@ -3,6 +3,10 @@ package com.project.uber.Uber.entities;
 import com.project.uber.Uber.entities.enums.PaymentMethod;
 import com.project.uber.Uber.entities.enums.RideStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
 
@@ -15,25 +19,39 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Pick-up location is required")
     @Column(columnDefinition = "Geometry(Point, 4326)")
     private Point pickUpLocation;
+
+    @NotNull(message = "Drop-off location is required")
     @Column(columnDefinition = "Geometry(Point, 4326)")
     private Point dropOffLocation;
 
     @CreationTimestamp
     private LocalDateTime createdTime;
 
+    @NotNull(message = "Rider is required")
     @ManyToOne(fetch = FetchType.LAZY)
     private Rider rider;
+
+    @NotNull(message = "Driver is required")
     @ManyToOne(fetch = FetchType.LAZY)
     private Driver driver;
 
+    @NotNull(message = "Payment method is required")
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    @NotNull(message = "Ride status is required")
     @Enumerated(value = EnumType.STRING)
     private RideStatus status;
 
+    @NotNull(message = "Fare is required")
+    @Positive(message = "Fare must be greater than zero")
     private Double fare;
+
+    @NotBlank(message = "OTP is required")
+    @Size(min = 4, max = 6, message = "OTP must be between 4 and 6 characters")
     private String otp;
 
     private LocalDateTime startedAt;

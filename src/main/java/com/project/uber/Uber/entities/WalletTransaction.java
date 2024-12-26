@@ -3,6 +3,9 @@ package com.project.uber.Uber.entities;
 import com.project.uber.Uber.entities.enums.TransactionMethod;
 import com.project.uber.Uber.entities.enums.TransactionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,19 +17,24 @@ public class WalletTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Positive(message = "Transaction amount must be positive")
     private Double amount;
 
+    @NotNull(message = "Transaction type is required")
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
+
+    @NotNull(message = "Transaction method is required")
     @Enumerated(EnumType.STRING)
     private TransactionMethod transactionMethod;
 
-    @OneToOne
+    @ManyToOne
     private Ride ride;
 
     private String transactionId;
 
-    @ManyToOne
+    @NotNull(message = "Wallet is required")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Wallet wallet;
 
     @CreationTimestamp

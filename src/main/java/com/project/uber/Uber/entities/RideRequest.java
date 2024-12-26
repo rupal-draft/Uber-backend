@@ -3,6 +3,8 @@ package com.project.uber.Uber.entities;
 import com.project.uber.Uber.entities.enums.PaymentMethod;
 import com.project.uber.Uber.entities.enums.RideRequestStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
 
@@ -15,19 +17,30 @@ public class RideRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Pick-up location is required")
     @Column(columnDefinition = "Geometry(Point, 4326)")
     private Point pickUpLocation;
+
+    @NotNull(message = "Drop-off location is required")
     @Column(columnDefinition = "Geometry(Point, 4326)")
     private Point dropOffLocation;
 
     @CreationTimestamp
     private LocalDateTime requestTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "Rider is required")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Rider rider;
+
+    @NotNull(message = "Fare is required")
+    @Positive(message = "Fare must be greater than zero")
     private Double fare;
+
+    @NotNull(message = "Payment method is required")
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    @NotNull(message = "Request status is required")
     @Enumerated(value = EnumType.STRING)
     private RideRequestStatus status;
 

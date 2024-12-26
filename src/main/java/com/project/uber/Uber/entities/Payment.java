@@ -3,6 +3,8 @@ package com.project.uber.Uber.entities;
 import com.project.uber.Uber.entities.enums.PaymentMethod;
 import com.project.uber.Uber.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,15 +16,20 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Payment method is required")
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "Ride associated with the payment is required")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Ride ride;
 
+    @NotNull(message = "Payment status is required")
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
+    @NotNull(message = "Payment amount is required")
+    @Positive(message = "Payment amount must be greater than zero")
     private Double amount;
 
     @CreationTimestamp
