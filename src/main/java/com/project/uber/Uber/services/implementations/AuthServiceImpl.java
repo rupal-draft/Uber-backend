@@ -1,20 +1,20 @@
 package com.project.uber.Uber.services.implementations;
 
-import com.project.uber.Uber.dto.DriverDto;
-import com.project.uber.Uber.dto.OnboardDriverDto;
-import com.project.uber.Uber.dto.SignupDto;
-import com.project.uber.Uber.dto.UserDto;
+import com.project.uber.Uber.dto.*;
 import com.project.uber.Uber.entities.Driver;
 import com.project.uber.Uber.entities.User;
 import com.project.uber.Uber.entities.enums.Roles;
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.UserRepository;
-import com.project.uber.Uber.services.AuthService;
-import com.project.uber.Uber.services.DriverService;
-import com.project.uber.Uber.services.RiderService;
-import com.project.uber.Uber.services.WalletService;
+import com.project.uber.Uber.security.JwtService;
+import com.project.uber.Uber.services.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,18 +29,36 @@ public class AuthServiceImpl implements AuthService {
     private final RiderService riderService;
     private final WalletService walletService;
     private final DriverService driverService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserService userService;
 
-    public AuthServiceImpl(ModelMapper modelMapper, UserRepository userRepository, DriverService driverService, RiderService riderService, WalletService walletService) {
+    public AuthServiceImpl(ModelMapper modelMapper, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserService userService, JwtService jwtService, UserRepository userRepository, DriverService driverService, RiderService riderService, WalletService walletService) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.riderService = riderService;
         this.walletService = walletService;
         this.driverService = driverService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @Override
-    public String login(String email, String password) {
-        return "";
+    public String[] login(LoginRequestDto loginRequestDto) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(),loginRequestDto.getPassword())
+        );
+
+        User user = (User) authentication.getPrincipal();
+
+        String accessToken = jwtService.getAccessJwtToken(user);
+        String refreshToken = jwtService.getRefreshJwtToken(user);
+
+        return new String[]{accessToken, refreshToken};
     }
 
     @Override
@@ -51,6 +69,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeConflictException("User already exists with that email!");
         }
         User mappedUser = modelMapper.map(signupDto,User.class);
+        mappedUser.setPassword(passwordEncoder.encode(mappedUser.getPassword()));
         mappedUser.setRoles(Set.of(Roles.RIDER));
         User savedUser = userRepository.save(mappedUser);
         riderService.createNewRider(savedUser);
@@ -82,5 +101,16 @@ public class AuthServiceImpl implements AuthService {
         Driver savedDriver = driverService.createNewDriver(createDriver);
 
         return modelMapper.map(savedDriver, DriverDto.class);
+    }
+
+    @Override
+    public LoginResponseDto refreshToken(String refreshToken) {
+
+        Long userId = jwtService.getUserId(refreshToken);
+        User user = userService.getUserFromId(userId);
+        if(user == null) throw new AuthenticationCredentialsNotFoundException("User not found");
+
+        String accessToken = jwtService.getAccessJwtToken(user);
+        return new LoginResponseDto(accessToken);
     }
 }

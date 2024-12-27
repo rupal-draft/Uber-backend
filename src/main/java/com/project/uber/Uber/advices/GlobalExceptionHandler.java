@@ -2,12 +2,18 @@ package com.project.uber.Uber.advices;
 
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +67,72 @@ public class GlobalExceptionHandler {
                 .setStatus(HttpStatus.BAD_REQUEST)
                 .setMessage("Input validation failed!")
                 .setSubErrors(errors)
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.UNAUTHORIZED)
+                .setMessage(exception.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleUsernameNotFoundException(UsernameNotFoundException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.UNAUTHORIZED)
+                .setMessage(exception.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(AuthenticationServiceException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationServiceException(AuthenticationServiceException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.UNAUTHORIZED)
+                .setMessage(exception.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.UNAUTHORIZED)
+                .setMessage(exception.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<?>> handleJwtException(JwtException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.UNAUTHORIZED)
+                .setMessage(exception.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(AccessDeniedException exception){
+        ApiError apiError = new ApiError
+                .ApiErrorBuilder()
+                .setStatus(HttpStatus.FORBIDDEN)
+                .setMessage(exception.getLocalizedMessage())
                 .build();
 
         return buildErrorResponseEntity(apiError);

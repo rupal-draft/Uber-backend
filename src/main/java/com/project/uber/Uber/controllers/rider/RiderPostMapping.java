@@ -7,10 +7,12 @@ import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.services.RatingManagementService;
 import com.project.uber.Uber.services.RiderService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rider")
+@Secured("ROLE_RIDER")
 public class RiderPostMapping {
 
     private final RiderService riderService;

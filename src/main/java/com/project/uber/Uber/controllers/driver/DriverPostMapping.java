@@ -7,10 +7,12 @@ import com.project.uber.Uber.dto.RiderDto;
 import com.project.uber.Uber.services.DriverService;
 import com.project.uber.Uber.services.RatingManagementService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/driver")
+@Secured("ROLE_DRIVER")
 public class DriverPostMapping {
 
     private final DriverService driverService;

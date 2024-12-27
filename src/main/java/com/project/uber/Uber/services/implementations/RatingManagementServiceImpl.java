@@ -1,22 +1,17 @@
 package com.project.uber.Uber.services.implementations;
 
 import com.project.uber.Uber.dto.DriverDto;
-import com.project.uber.Uber.dto.RatingDto;
 import com.project.uber.Uber.dto.RiderDto;
 import com.project.uber.Uber.entities.Driver;
 import com.project.uber.Uber.entities.Rating;
 import com.project.uber.Uber.entities.Ride;
 import com.project.uber.Uber.entities.Rider;
-import com.project.uber.Uber.entities.enums.RideStatus;
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.DriverRepository;
 import com.project.uber.Uber.repositories.RatingRepository;
 import com.project.uber.Uber.repositories.RiderRepository;
-import com.project.uber.Uber.services.DriverService;
 import com.project.uber.Uber.services.RatingManagementService;
-import com.project.uber.Uber.services.RideService;
-import com.project.uber.Uber.services.RiderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

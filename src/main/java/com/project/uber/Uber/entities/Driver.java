@@ -9,7 +9,8 @@ import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(indexes = {
-        @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId")
+        @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId"),
+        @Index(name = "idx_driver_user", columnList = "user_id")
 })
 public class Driver {
 

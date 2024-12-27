@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_rider_user", columnList = "user_id")
+})
 public class Rider {
 
     @Id
