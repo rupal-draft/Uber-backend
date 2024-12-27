@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Positive;
 import org.locationtech.jts.geom.Point;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId")
+})
 public class Driver {
 
     @Id

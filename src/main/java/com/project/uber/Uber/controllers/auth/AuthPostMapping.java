@@ -1,4 +1,4 @@
-package com.project.uber.Uber.controllers;
+package com.project.uber.Uber.controllers.auth;
 
 
 import com.project.uber.Uber.dto.DriverDto;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthPostMapping {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthPostMapping(AuthService authService) {
         this.authService = authService;
     }
 

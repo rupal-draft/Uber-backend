@@ -4,9 +4,15 @@ import com.project.uber.Uber.dto.DriverDto;
 import com.project.uber.Uber.dto.RatingDto;
 import com.project.uber.Uber.dto.RiderDto;
 import com.project.uber.Uber.entities.Driver;
+import com.project.uber.Uber.entities.Rating;
 import com.project.uber.Uber.entities.Ride;
 import com.project.uber.Uber.entities.Rider;
 import com.project.uber.Uber.entities.enums.RideStatus;
+import com.project.uber.Uber.exceptions.ResourceNotFoundException;
+import com.project.uber.Uber.exceptions.RuntimeConflictException;
+import com.project.uber.Uber.repositories.DriverRepository;
+import com.project.uber.Uber.repositories.RatingRepository;
+import com.project.uber.Uber.repositories.RiderRepository;
 import com.project.uber.Uber.services.DriverService;
 import com.project.uber.Uber.services.RatingManagementService;
 import com.project.uber.Uber.services.RideService;
@@ -18,40 +24,74 @@ import org.springframework.stereotype.Service;
 @Service
 public class RatingManagementServiceImpl implements RatingManagementService {
 
-    private final RiderService riderService;
-    private final DriverService driverService;
-    private final RideService rideService;
+
+    private final RatingRepository ratingRepository;
+    private final DriverRepository driverRepository;
+    private final RiderRepository riderRepository;
     private final ModelMapper modelMapper;
 
-    public RatingManagementServiceImpl(RiderService riderService, DriverService driverService, RideService rideService, ModelMapper modelMapper) {
-        this.riderService = riderService;
-        this.driverService = driverService;
-        this.rideService = rideService;
+    public RatingManagementServiceImpl(RatingRepository ratingRepository, ModelMapper modelMapper, DriverRepository driverRepository, RiderRepository riderRepository) {
+        this.ratingRepository = ratingRepository;
+        this.driverRepository = driverRepository;
+        this.riderRepository = riderRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public DriverDto rateDriver(RatingDto rating) {
-        Ride ride = rideService.getRideById(rating.getRideId());
-        Rider rider = riderService.getCurrentRider();
+    public DriverDto rateDriver(Ride ride, Driver driver, Double rating) {
+        Rating ratingObj = ratingRepository
+                .findByRide(ride)
+                .orElseThrow(()-> new ResourceNotFoundException("Rating not found!"));
 
-        RiderServiceImpl.validateRide(ride, rider, RideStatus.ENDED);
+        if(ratingObj.getDriverRating() != null) throw new RuntimeConflictException("Cannot rate driver again!");
 
-        Driver driver = driverService.updateRating(ride.getDriver(),rating.getRating());
+        ratingObj.setDriverRating(rating);
+        ratingRepository.save(ratingObj);
 
-        return modelMapper.map(driver,DriverDto.class);
+        Double newRating = ratingRepository
+                .findByDriver(driver)
+                .stream()
+                .mapToDouble(rating1 -> rating1.getDriverRating())
+                .average()
+                .orElse(0.0);
+        driver.setRating(newRating);
+        Driver driverSaved = driverRepository.save(driver);
+        return modelMapper.map(driverSaved, DriverDto.class);
     }
 
     @Override
-    public RiderDto rateRider(RatingDto rating) {
+    public RiderDto rateRider(Ride ride, Rider rider, Double rating) {
 
-        Ride ride = rideService.getRideById(rating.getRideId());
-        Driver driver = driverService.getCurrentDriver();
+        Rating ratingObj = ratingRepository
+                .findByRide(ride)
+                .orElseThrow(()-> new ResourceNotFoundException("Rating not found!"));
 
-        DriverServiceImpl.validateRide(ride, driver, RideStatus.ENDED);
+        if(ratingObj.getRiderRating() != null) throw new RuntimeConflictException("Cannot rate rider again!");
 
-        Rider rider = riderService.updateRating(ride.getRider(), rating.getRating());
+        ratingObj.setRiderRating(rating);
+        ratingRepository.save(ratingObj);
 
-        return modelMapper.map(rider, RiderDto.class);
+        Double newRating = ratingRepository
+                .findByRider(rider)
+                .stream()
+                .mapToDouble(rating1 -> rating1.getRiderRating())
+                .average()
+                .orElse(0.0);
+        rider.setRating(newRating);
+        Rider savedRider = riderRepository.save(rider);
+        return modelMapper.map(savedRider, RiderDto.class);
     }
+
+    @Override
+    public void createNewRating(Ride ride) {
+        Rating rating = new Rating
+                .RatingBuilder()
+                .ride(ride)
+                .rider(ride.getRider())
+                .driver(ride.getDriver())
+                .build();
+        ratingRepository.save(rating);
+    }
+
+
 }

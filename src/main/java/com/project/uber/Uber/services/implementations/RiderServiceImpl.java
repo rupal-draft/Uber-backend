@@ -1,5 +1,6 @@
 package com.project.uber.Uber.services.implementations;
 
+import com.project.uber.Uber.dto.DriverDto;
 import com.project.uber.Uber.dto.RideDto;
 import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.dto.RiderDto;
@@ -14,6 +15,7 @@ import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.RideRequestRepository;
 import com.project.uber.Uber.repositories.RiderRepository;
 import com.project.uber.Uber.services.DriverService;
+import com.project.uber.Uber.services.RatingManagementService;
 import com.project.uber.Uber.services.RideService;
 import com.project.uber.Uber.services.RiderService;
 import com.project.uber.Uber.strategies.mangers.DriverMatchingStrategyManager;
@@ -37,8 +39,9 @@ public class RiderServiceImpl implements RiderService {
     private final RiderRepository riderRepository;
     private final RideService rideService;
     private final DriverService driverService;
+    private final RatingManagementService ratingManagementService;
 
-    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, DriverMatchingStrategyManager driverMatchingStrategyManager, RiderRepository riderRepository, RideService rideService, DriverService driverService, RideFareCalculationStrategyManager rideFareCalculationStrategyManager) {
+    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, RatingManagementService ratingManagementService, DriverMatchingStrategyManager driverMatchingStrategyManager, RiderRepository riderRepository, RideService rideService, DriverService driverService, RideFareCalculationStrategyManager rideFareCalculationStrategyManager) {
         this.modelMapper = modelMapper;
         this.rideRequestRepository = rideRequestRepository;
         this.driverMatchingStrategyManager = driverMatchingStrategyManager;
@@ -46,6 +49,7 @@ public class RiderServiceImpl implements RiderService {
         this.rideService = rideService;
         this.driverService = driverService;
         this.rideFareCalculationStrategyManager = rideFareCalculationStrategyManager;
+        this.ratingManagementService = ratingManagementService;
     }
 
     @Override
@@ -89,6 +93,19 @@ public class RiderServiceImpl implements RiderService {
         return rideService
                 .getAllRidesOfRider(rider,pageRequest)
                 .map(ride -> modelMapper.map(ride,RideDto.class));
+    }
+
+    @Override
+    public DriverDto rateDriver(Long rideId, Double rating) {
+
+        Ride ride = rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
+
+        validateRide(ride,rider,RideStatus.ENDED);
+
+        DriverDto driverDto = ratingManagementService.rateDriver(ride, ride.getDriver(), rating);
+
+        return driverDto;
     }
 
     @Override

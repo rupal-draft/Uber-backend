@@ -1,5 +1,6 @@
 package com.project.uber.Uber.services;
 
+import com.project.uber.Uber.dto.DriverDto;
 import com.project.uber.Uber.dto.RideDto;
 import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.dto.RiderDto;
@@ -17,6 +18,8 @@ public interface RiderService {
     RiderDto getRiderProfile();
 
     Page<RideDto> getAllMyRides(Pageable pageRequest);
+
+    DriverDto rateDriver(Long rideId, Double rating);
 
     void createNewRider(User savedUser);
 

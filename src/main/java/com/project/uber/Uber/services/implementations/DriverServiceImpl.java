@@ -1,8 +1,6 @@
 package com.project.uber.Uber.services.implementations;
 
-import com.project.uber.Uber.dto.DriverDto;
-import com.project.uber.Uber.dto.DriverRideDto;
-import com.project.uber.Uber.dto.RideStartDto;
+import com.project.uber.Uber.dto.*;
 import com.project.uber.Uber.entities.Driver;
 import com.project.uber.Uber.entities.Ride;
 import com.project.uber.Uber.entities.RideRequest;
@@ -11,10 +9,7 @@ import com.project.uber.Uber.entities.enums.RideStatus;
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.DriverRepository;
-import com.project.uber.Uber.services.DriverService;
-import com.project.uber.Uber.services.PaymentService;
-import com.project.uber.Uber.services.RideRequestService;
-import com.project.uber.Uber.services.RideService;
+import com.project.uber.Uber.services.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,13 +26,15 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
+    private final RatingManagementService ratingManagementService;
 
-    public DriverServiceImpl(RideRequestService rideRequestService, DriverRepository driverRepository, RideService rideService, ModelMapper modelMapper, PaymentService paymentService) {
+    public DriverServiceImpl(RideRequestService rideRequestService, RatingManagementService ratingManagementService, DriverRepository driverRepository, RideService rideService, ModelMapper modelMapper, PaymentService paymentService) {
         this.rideRequestService = rideRequestService;
         this.driverRepository = driverRepository;
         this.rideService = rideService;
         this.modelMapper = modelMapper;
         this.paymentService = paymentService;
+        this.ratingManagementService = ratingManagementService;
     }
 
     @Override
@@ -87,6 +84,7 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide = rideService.updateRideStatus(ride , RideStatus.ONGOING);
 
         paymentService.createNewPayment(savedRide);
+        ratingManagementService.createNewRating(savedRide);
 
         return modelMapper.map(savedRide, DriverRideDto.class);
     }
@@ -111,6 +109,19 @@ public class DriverServiceImpl implements DriverService {
     public DriverDto getDriverProfile() {
         Driver driver = getCurrentDriver();
         return modelMapper.map(driver, DriverDto.class);
+    }
+
+    @Override
+    public RiderDto rateRider(Long rideId , Double rating) {
+
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        validateRide(ride, driver, RideStatus.ENDED);
+
+        RiderDto riderDto = ratingManagementService.rateRider(ride, ride.getRider(), rating);
+
+        return riderDto;
     }
 
     @Override
