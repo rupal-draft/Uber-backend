@@ -4,20 +4,14 @@ import com.project.uber.Uber.dto.DriverDto;
 import com.project.uber.Uber.dto.RideDto;
 import com.project.uber.Uber.dto.RideRequestDto;
 import com.project.uber.Uber.dto.RiderDto;
-import com.project.uber.Uber.entities.Ride;
-import com.project.uber.Uber.entities.RideRequest;
-import com.project.uber.Uber.entities.Rider;
-import com.project.uber.Uber.entities.User;
+import com.project.uber.Uber.entities.*;
 import com.project.uber.Uber.entities.enums.RideRequestStatus;
 import com.project.uber.Uber.entities.enums.RideStatus;
 import com.project.uber.Uber.exceptions.ResourceNotFoundException;
 import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.RideRequestRepository;
 import com.project.uber.Uber.repositories.RiderRepository;
-import com.project.uber.Uber.services.DriverService;
-import com.project.uber.Uber.services.RatingManagementService;
-import com.project.uber.Uber.services.RideService;
-import com.project.uber.Uber.services.RiderService;
+import com.project.uber.Uber.services.*;
 import com.project.uber.Uber.strategies.mangers.DriverMatchingStrategyManager;
 import com.project.uber.Uber.strategies.mangers.RideFareCalculationStrategyManager;
 import org.apache.log4j.Logger;
@@ -28,6 +22,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class RiderServiceImpl implements RiderService {
@@ -42,8 +38,9 @@ public class RiderServiceImpl implements RiderService {
     private final RideService rideService;
     private final DriverService driverService;
     private final RatingManagementService ratingManagementService;
+    private final NotificationService notificationService;
 
-    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, RatingManagementService ratingManagementService, DriverMatchingStrategyManager driverMatchingStrategyManager, RiderRepository riderRepository, RideService rideService, DriverService driverService, RideFareCalculationStrategyManager rideFareCalculationStrategyManager) {
+    public RiderServiceImpl(ModelMapper modelMapper, RideRequestRepository rideRequestRepository, RatingManagementService ratingManagementService, DriverMatchingStrategyManager driverMatchingStrategyManager, NotificationService notificationService, RiderRepository riderRepository, RideService rideService, DriverService driverService, RideFareCalculationStrategyManager rideFareCalculationStrategyManager) {
         this.modelMapper = modelMapper;
         this.rideRequestRepository = rideRequestRepository;
         this.driverMatchingStrategyManager = driverMatchingStrategyManager;
@@ -52,6 +49,7 @@ public class RiderServiceImpl implements RiderService {
         this.driverService = driverService;
         this.rideFareCalculationStrategyManager = rideFareCalculationStrategyManager;
         this.ratingManagementService = ratingManagementService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -61,11 +59,23 @@ public class RiderServiceImpl implements RiderService {
         Rider rider = getCurrentRider();
         RideRequest rideRequest = modelMapper.map(rideRequestDto,RideRequest.class);
         rideRequest.setStatus(RideRequestStatus.PENDING);
-        Double fare = rideFareCalculationStrategyManager.rideFareCalculation().calculateFare(rideRequest);
+
+        Double fare = rideFareCalculationStrategyManager
+                .rideFareCalculation()
+                .calculateFare(rideRequest);
         rideRequest.setFare(fare);
+
         rideRequest.setRider(rider);
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
-        driverMatchingStrategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
+
+        List<Driver> matchingDrivers = driverMatchingStrategyManager
+                .driverMatchingStrategy(rider.getRating())
+                .findMatchingDrivers(rideRequest);
+        String[] emails = matchingDrivers.stream()
+                .map(driver -> driver.getUser().getEmail())
+                .toArray(String[]::new);
+        notificationService.sendEmail(emails, "New Ride Request", "A new ride request is available. Please check your app.");
+
         return modelMapper.map(savedRideRequest,RideRequestDto.class);
 
     }
