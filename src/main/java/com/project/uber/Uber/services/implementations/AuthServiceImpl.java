@@ -9,6 +9,8 @@ import com.project.uber.Uber.exceptions.RuntimeConflictException;
 import com.project.uber.Uber.repositories.UserRepository;
 import com.project.uber.Uber.security.JwtService;
 import com.project.uber.Uber.services.*;
+import com.project.uber.Uber.utils.GeometryUtil;
+import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -88,12 +90,14 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeConflictException("User is already a driver!");
         }
 
+        Point currentLocation = GeometryUtil.createPoint(onboardDriverDto.getCurrentLocation());
         Driver createDriver = new Driver
                 .DriverBuilder()
                 .available(true)
                 .rating(0.0)
                 .user(user)
                 .vehicleId(onboardDriverDto.getVehicleId())
+                .currentLocation(currentLocation)
                 .build();
 
         user.getRoles().add(Roles.DRIVER);

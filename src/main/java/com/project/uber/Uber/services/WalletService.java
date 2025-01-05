@@ -11,8 +11,6 @@ public interface WalletService {
 
     Wallet subtractMoneyFromWallet(User user, Double amount, String transactionId, Ride ride, TransactionMethod transactionMethod);
 
-    void fetchMoneyFromWallet();
-
     Wallet findWalletById(Long walletId);
 
     Wallet findByUser(User user);

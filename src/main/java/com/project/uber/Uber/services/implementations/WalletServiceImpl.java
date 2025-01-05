@@ -38,6 +38,7 @@ public class WalletServiceImpl implements WalletService {
                 .transactionMethod(transactionMethod)
                 .transactionType(TransactionType.CREDIT)
                 .ride(ride)
+                .amount(amount)
                 .wallet(wallet)
                 .build();
         walletTransactionService.createNewWalletTransaction(walletTransaction);
@@ -59,16 +60,12 @@ public class WalletServiceImpl implements WalletService {
                 .transactionMethod(transactionMethod)
                 .transactionType(TransactionType.DEBIT)
                 .ride(ride)
+                .amount(amount)
                 .wallet(wallet)
                 .build();
 
         wallet.getTransactions().add(walletTransaction);
         return walletRepository.save(wallet);
-    }
-
-    @Override
-    public void fetchMoneyFromWallet() {
-
     }
 
     @Override
@@ -89,6 +86,7 @@ public class WalletServiceImpl implements WalletService {
     public Wallet createNewWallet(User user) {
         Wallet wallet = new Wallet();
         wallet.setUser(user);
+        wallet.setBalance(1000D);
         return walletRepository.save(wallet);
     }
 }

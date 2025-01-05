@@ -84,6 +84,8 @@ public class RatingManagementServiceImpl implements RatingManagementService {
                 .ride(ride)
                 .rider(ride.getRider())
                 .driver(ride.getDriver())
+                .driverRating(0.0)
+                .riderRating(0.0)
                 .build();
         ratingRepository.save(rating);
     }
