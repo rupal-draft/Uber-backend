@@ -12,6 +12,7 @@ import com.project.uber.Uber.repositories.DriverRepository;
 import com.project.uber.Uber.repositories.RatingRepository;
 import com.project.uber.Uber.repositories.RiderRepository;
 import com.project.uber.Uber.services.RatingManagementService;
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class RatingManagementServiceImpl implements RatingManagementService {
 
 
+    private static final Logger log = Logger.getLogger(RatingManagementServiceImpl.class);
     private final RatingRepository ratingRepository;
     private final DriverRepository driverRepository;
     private final RiderRepository riderRepository;
@@ -37,8 +39,9 @@ public class RatingManagementServiceImpl implements RatingManagementService {
         Rating ratingObj = ratingRepository
                 .findByRide(ride)
                 .orElseThrow(()-> new ResourceNotFoundException("Rating not found!"));
+        log.info(ratingObj.getDriverRating());
 
-        if(ratingObj.getDriverRating() != null) throw new RuntimeConflictException("Cannot rate driver again!");
+        if(ratingObj.getDriverRating() != 0.0) throw new RuntimeConflictException("Cannot rate driver again!");
 
         ratingObj.setDriverRating(rating);
         ratingRepository.save(ratingObj);
@@ -61,7 +64,7 @@ public class RatingManagementServiceImpl implements RatingManagementService {
                 .findByRide(ride)
                 .orElseThrow(()-> new ResourceNotFoundException("Rating not found!"));
 
-        if(ratingObj.getRiderRating() != null) throw new RuntimeConflictException("Cannot rate rider again!");
+        if(ratingObj.getRiderRating() != 0.0) throw new RuntimeConflictException("Cannot rate rider again!");
 
         ratingObj.setRiderRating(rating);
         ratingRepository.save(ratingObj);
