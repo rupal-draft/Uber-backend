@@ -81,7 +81,7 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     git clone https://github.com/rupal-draft/Uber-backend.git
     ```
 
-  2.Create .env file
+2. Create .env file
 
 3. Configure PostgreSQL database.
     ```sh
