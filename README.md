@@ -80,8 +80,9 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     ```sh
     git clone https://github.com/rupal-draft/Uber-backend.git
     ```
+2.Create .env file
 
-2. Configure PostgreSQL database.
+3. Configure PostgreSQL database.
     ```sh
     spring.datasource.url=[Your database url]
     spring.datasource.username=[Your username]
@@ -90,16 +91,16 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     spring.jpa.show-sql=true
     spring.jpa.properties.hibernate.format_sql=true  
     ```
-2. Configure your email sender.
+4. Configure your email sender.
     ```sh
-    spring.mail.password=[Your password]
-    spring.mail.username=[Your email address]
-    spring.mail.host=[Email host]
-    spring.mail.port=[Port]
+    spring.mail.password=$[Your password]
+    spring.mail.username=$[Your email address]
+    spring.mail.host=$[Email host]
+    spring.mail.port=$[Port]
     spring.mail.properties.mail.smtp.auth=true
     spring.mail.properties.mail.smtp.starttls.enable=true  
     ```
-2. Configure your log4j.
+5. Configure your log4j.
     ```sh
     log4j.rootLogger=INFO, stdout, file
     log4j.appender.stdout=org.apache.log4j.ConsoleAppender
@@ -115,7 +116,7 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     log4j.logger.com.project.uber.Uber=DEBUG, stdout, file
     log4j.additivity.com.project.uber.Uber=false 
     ```          
-3. Run the application using the following command:
+6. Run the application using the following command:
    ```sh
    ./mvnw spring-boot:run
    ```
