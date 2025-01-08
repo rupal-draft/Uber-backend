@@ -2,7 +2,7 @@
 # Uber Backend Project
 
 ## Low-Level Design
-![LLD](https://github.com/user-attachments/assets/LLD.png)
+![LLD](/assets/LLD.png)
 
 ## Overview
 This project is an Uber backend system implementation using Spring Boot, PostgreSQL, and various Spring modules. The APIs are well-documented using Swagger and Postman.
