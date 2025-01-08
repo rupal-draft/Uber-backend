@@ -118,7 +118,6 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     log4j.additivity.com.project.uber.Uber=false 
     ```          
 6. Run the application using the following command:
-   
    ```sh
    ./mvnw spring-boot:run
    ```
@@ -127,6 +126,7 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
 - The application can be built and run using the provided Dockerfile.
 - The Docker image for this project has been created and pushed to Docker Hub.
 - It is public and can be pulled using the following command:
+  
     ```bash
     docker pull rupaldraft/uber-image:latest
     ```
