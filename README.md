@@ -118,6 +118,7 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
     log4j.additivity.com.project.uber.Uber=false 
     ```          
 6. Run the application using the following command:
+   
    ```sh
    ./mvnw spring-boot:run
    ```
