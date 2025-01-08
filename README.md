@@ -34,8 +34,8 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
   - Secured APIs with role-based access control.
   - Implemented password encoding with Bcrypt and session management.
 - **Deployment(in progess):**
-  - CI/CD pipelines created using AWS CodePipeline.
-  - Deployed on Elastic Beanstalk using CodeDeploy.
+  - Deployed on Render using Docker image.
+  - For PostgreSQL cloud, Neon is used.
 - **Email Notifications:**
   - OTP and ride acceptance notifications sent through emails.
   - Currently for email service I am using JavaMailSender.  
@@ -122,6 +122,13 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
    ./mvnw spring-boot:run
    ```
 
+## Docker Image
+- The application can be built and run using the provided Dockerfile.
+- The Docker image for this project has been created and pushed to Docker Hub.
+- It is public and can be pulled using the following command:
+    ```bash
+    docker pull rupaldraft/uber-image:latest
+    ```
 
 ## Contact
 For any inquiries, please reach out to rupalpaultmsl@gmail.com.
