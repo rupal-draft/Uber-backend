@@ -22,7 +22,7 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
 
         List<String> allowedRoutes = List.of(
-                "/v3/api-docs", "/actuator");
+                "/v3/api-docs", "/actuator","/swagger-ui/index.html");
         boolean isAllowed = allowedRoutes
                 .stream()
                 .anyMatch(route -> request
