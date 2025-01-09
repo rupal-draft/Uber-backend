@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
-        "/auth/**"
+        "/auth/**","/v3/api-docs", "/actuator", "/swagger-ui/index.html"
     };
 
     private final JwtAuthFilter jwtAuthFilter;
