@@ -73,7 +73,7 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
 ## Documentation Links
 - **Swagger UI:** [Link to Swagger Documentation](https://uber-i8xg.onrender.com/swagger-ui/index.html)
 - **Postman Collection:** [Link to Postman Documentation](https://documenter.getpostman.com/view/30415721/2sAYJAdxZj)
-- **Swagger UI:** [Link to Actuator](https://uber-i8xg.onrender.com/actuator)
+- **Actuator:** [Link to Actuator](https://uber-i8xg.onrender.com/actuator)
 
 ![Post Mappings](/assets/PostMappings.png)
 ![Get Mappings](/assets/GetMappings.png)
