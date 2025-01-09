@@ -71,9 +71,9 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
 | /rider/rateDriver/{rideId} | POST        | Rate a driver                                    |
 
 ## Documentation Links
-- **Swagger UI:** [Link to Swagger Documentation]
+- **Swagger UI:** [Link to Swagger Documentation](https://uber-i8xg.onrender.com/swagger-ui/index.html)
 - **Postman Collection:** [Link to Postman Documentation](https://documenter.getpostman.com/view/30415721/2sAYJAdxZj)
-- **Swagger UI:** [Link to Actuator]
+- **Swagger UI:** [Link to Actuator](https://uber-i8xg.onrender.com/actuator)
 
 ## Installation
 1. Clone the repository.
