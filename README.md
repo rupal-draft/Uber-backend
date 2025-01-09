@@ -75,6 +75,10 @@ This project is an Uber backend system implementation using Spring Boot, Postgre
 - **Postman Collection:** [Link to Postman Documentation](https://documenter.getpostman.com/view/30415721/2sAYJAdxZj)
 - **Swagger UI:** [Link to Actuator](https://uber-i8xg.onrender.com/actuator)
 
+![Post Mappings](/assets/PostMappings.png)
+![Get Mappings](/assets/GetMappings.png)
+
+
 ## Installation
 1. Clone the repository.
     ```sh
