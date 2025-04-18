@@ -80,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public DriverDto onboardNewDriver(Long userId, OnboardDriverDto onboardDriverDto) {
 
         User user = userRepository
